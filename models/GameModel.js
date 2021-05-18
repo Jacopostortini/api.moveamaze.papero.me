@@ -1,21 +1,25 @@
-const mongoose = require("mongoose")
+import * as mongoose from "mongoose";
 
 const GameSchema = new mongoose.Schema({
-    status: { //0 == lobby, 1 == playing, 2 == ended
+    status: {
         type: Number,
         default: 0
     },
-    playersIds: { //{"userId": userId}
+    players: {
         type: Object,
         default: {}
     },
-    admin: { //User id
+    admin: {
         type: Number,
         required: true
     },
-    tiles: { // {"tileId": {id: Number, position: Array, rotation: Number}
+    tiles: {
         type: Object,
         default: {}
+    },
+    gameId: {
+        type: String,
+        required: true
     }
 }, {timestamps: true});
 

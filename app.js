@@ -1,10 +1,8 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const mongoose = require("mongoose");
-
+import express from "express";
+import cookieParser from "cookie-parser";
+import mongoose from "mongoose";
 require("dotenv").config();
-
-const indexRouter = require('./routes/index');
+import router from "./routes/index";
 
 const app = express();
 const http = require("http").Server(app);
@@ -14,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', indexRouter);
+app.use('/', router);
 
 mongoose.connect(process.env.MONGO_DB_URL, { useNewUrlParser: true, useUnifiedTopology: true})
     .then(()=>{

@@ -1,21 +1,36 @@
-const mongoose = require("mongoose");
+const PlayerModel = require("../models/PlayerModel");
+const Game = require("./Game");
 
-class Player extends mongoose.Model{
+class Player extends PlayerModel{
   constructor(object){
     super(object);
-  }
-
-  async save(){
-    await super.save();
-  }
-
-  async remove(){
-    await super.remove();
+    /*
+     * this.userId = object.userId;
+     * this.socketId = object.socketId;
+     * this.activeGameId = object.activeGameId;
+     * this.save();
+     * this.remove();
+     */
   }
 
   static async findByUserId(userId){
-    return await super.findOne({userId}).exec();
+    const playerModel = await PlayerModel.findOne({userId}).exec();
+    return new Player(playerModel);
   }
 
-  async
+  static async findByGameId(gameId){
+    const game = Game.findByGameId(gameId);
+    const players = {};
+    for(const userId in game.players){
+      players[userId] = this.findByUserId(userId);
+    }
+    return players;
+  }
+
+  static async findBySocketId(socketId){
+    const playerModel = await PlayerModel.findOne({socketId}).exec();
+    return new Player(playerModel);
+  }
 }
+
+module.exports = Player;

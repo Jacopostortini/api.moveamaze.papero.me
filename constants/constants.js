@@ -1,3 +1,16 @@
-const defaultDelay = 5 * 24 * 60 * 60 * 1000;
+import cookie from "cookie";
 
-module.exports = {defaultDelay}
+const getCookies = (socket) => {
+    try {
+        return cookie.parse(socket.handshake.headers.cookie);
+    } catch (e) {
+        console.log(e)
+        return null
+    }
+}
+
+const gameConfig = {
+    maxPlayers: 4
+}
+
+export {getCookies, gameConfig}
