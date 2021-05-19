@@ -64,6 +64,19 @@ export default (http) => {
       broadcastDataToPlayers(endpoints.LOBBY_MODIFIED, io, game.getGame(userId), game.gameId);
     });
 
+    socket.on(endpoints.CHANGE_COLOR, async color => {
+      //Get player and active game
+      const {player, game} = findPlayerAndGameBySocketId(socket.id);
+      if(!player || !game) return null;
+      if(game.players[player.userId]){
+        if(game.isColorAvailable(color)) {
+          game.players[player.userId].color = color;
+          await game.save();
+          broadcastDataToPlayers(endpoints.LOBBY_MODIFIED, io, game.getGame(), game.gameId);
+        }
+      }
+    });
+
     socket.on("disconnect", async () => {
       //Get player and active game
       const {player, game} = findPlayerAndGameBySocketId(socket.id);

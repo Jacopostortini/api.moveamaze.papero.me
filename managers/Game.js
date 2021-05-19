@@ -114,6 +114,13 @@ class Game extends GameModel{
         }
         return null;
     }
+
+    isColorAvailable(color){
+        for(const userId in this.players){
+            if(this.players[userId].color === color) return false;
+        }
+        return true;
+    }
 }
 
 export default Game;
