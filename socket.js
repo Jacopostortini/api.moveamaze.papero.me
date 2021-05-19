@@ -1,7 +1,7 @@
 import endpoints from "./constants/endpoints";
 import Player from "./managers/Player";
 import Game from "./managers/Game";
-import {getCookies} from "./constants/constants";
+import {broadcastDataToPlayers, findPlayerAndGameBySocketId, getCookies} from "./constants/constants";
 
 export default (http) => {
   const io = require("socket.io")(http);
@@ -39,22 +39,47 @@ export default (http) => {
       } //TODO: status >= 1 ? implement online-offline
 
       //Respond with the whole game
-      //TODO: send game to connecting player
+      socket.emit(endpoints.LOBBY_MODIFIED, game.getGame(userId));
     });
 
     socket.on(endpoints.JOIN_GAME, async () => {
       //Get player and active game
-      const player = await Player.findBySocketId(socket.id);
-      if(!player) return null;
-      const game = await Game.findByGameId(player.activeGameId);
-      if(!game) return null;
-
+      const {player, game} = findPlayerAndGameBySocketId(socket.id);
+      if(!player || !game) return null;
       //Add player to game
       game.addPlayer({player, username});
       await game.save();
-
       //Update game
-      //TODO: send game to everybody
+      broadcastDataToPlayers(endpoints.LOBBY_MODIFIED, io, game.getGame(userId), game.gameId);
+    });
+
+    socket.on(endpoints.QUIT_GAME, async () => {
+      //Get player and active game
+      const {player, game} = findPlayerAndGameBySocketId(socket.id);
+      if(!player || !game) return null;
+      //Remove player from game
+      game.removePlayer(player);
+      await game.save();
+      //Update game
+      broadcastDataToPlayers(endpoints.LOBBY_MODIFIED, io, game.getGame(userId), game.gameId);
+    });
+
+    socket.on("disconnect", async () => {
+      //Get player and active game
+      const {player, game} = findPlayerAndGameBySocketId(socket.id);
+      if(!player || !game) return null;
+      if(game.status === 0){
+        game.removePlayer(player);
+        if(Object.entries(game.players).length === 0){
+          await game.remove();
+        } else {
+          await game.save();
+          broadcastDataToPlayers(endpoints.LOBBY_MODIFIED, io, game.getGame(userId), game.gameId);
+        }
+      } else {
+        //TODO: IMPLEMENT online-offline
+      }
+
     });
 
   });

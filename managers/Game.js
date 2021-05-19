@@ -36,7 +36,7 @@ class Game extends GameModel{
 
     static createFromPlayerAndGameId({player, gameId, username}){
         const players = {};
-        players[player.userId+""] = {
+        players[player.userId] = {
             userId: player.userId,
             localId: Date.now(),
             username,
@@ -49,9 +49,25 @@ class Game extends GameModel{
         });
     }
 
-    getGame(userId = null){
+    getGame(userId){
+        let yourLocalId = null;
+        if(userId){
+            if(this.players[userId]){
+                yourLocalId = this.players[userId].localId;
+            }
+        }
         if(this.status === 0){
-
+            const data = {
+                status: this.status,
+                admin: this.admin,
+                yourLocalId,
+                players: {}
+            }
+            for(const userId in this.players){
+                const {localId, username, color} = this.players[userId];
+                data.players[userId] = {localId, username, color}
+            }
+            return data;
         } else if(this.status === 1 || this.status === 1.5){
 
         } else if(this.status === 2){
@@ -63,13 +79,23 @@ class Game extends GameModel{
         if(this.status !== 0) return null;
         if(Object.entries(this.players).length >= gameConfig.maxPlayers) return null;
 
-        this.players[player.userId+""] = {
+        this.players[player.userId] = {
             userId: player.userId,
             localId: Date.now(),
             username,
             color: this.getFirstAvailableColor()
         }
     }
+
+    removePlayer(player){
+        if(this.status !== null) return null;
+        if(!this.players[player.userId]) return null;
+        if(this.admin === player.userId) {
+            this.admin = this.getFirstAvailableAdmin();
+        }
+        delete this.players[player.userId];
+    }
+
 
     getFirstAvailableColor(){
         for(let i = 0; i < gameConfig.maxPlayers; i++){
@@ -81,6 +107,13 @@ class Game extends GameModel{
         }
         return null;
     }
+
+    getFirstAvailableAdmin(){
+        for(const userId in this.players){
+            if(userId !== this.admin) return userId;
+        }
+        return null;
+    }
 }
 
-module.exports = Game;
+export default Game;
