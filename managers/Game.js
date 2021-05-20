@@ -59,7 +59,7 @@ class Game extends GameModel{
         if(this.status === 0){
             const data = {
                 status: this.status,
-                admin: this.admin,
+                admin: this.players[this.admin].localId,
                 yourLocalId,
                 players: {}
             }
