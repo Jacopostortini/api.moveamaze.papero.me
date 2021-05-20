@@ -65,7 +65,7 @@ class Game extends GameModel{
             }
             for(const userId in this.players){
                 const {localId, username, color} = this.players[userId];
-                data.players[userId] = {localId, username, color}
+                data.players[localId] = {localId, username, color};
             }
             return data;
         } else if(this.status === 1 || this.status === 1.5){
