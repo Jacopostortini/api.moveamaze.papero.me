@@ -1,6 +1,6 @@
-import cookie from "cookie";
-import Player from "../managers/Player";
-import Game from "../managers/Game";
+const cookie = require("cookie");
+const Player = require("../managers/Player");
+const Game = require("../managers/Game");
 
 const gameConfig = {
     maxPlayers: 4
@@ -29,4 +29,4 @@ const broadcastDataToPlayers = (endpoint, io, data, gameId) => {
     }
 }
 
-export {gameConfig, getCookies, findPlayerAndGameBySocketId, broadcastDataToPlayers}
+module.exports = {gameConfig, getCookies, findPlayerAndGameBySocketId, broadcastDataToPlayers};

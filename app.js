@@ -1,8 +1,8 @@
-import express from "express";
-import cookieParser from "cookie-parser";
-import mongoose from "mongoose";
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
 require("dotenv").config();
-import router from "./routes/index";
+const router = require("./routes/index");
 
 const app = express();
 const http = require("http").Server(app);

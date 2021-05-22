@@ -1,5 +1,5 @@
-import GameModel from "../models/GameModel";
-import {gameConfig} from "../constants/constants";
+const GameModel = require("../models/GameModel");
+const {gameConfig} = require("../constants/constants");
 
 class Game extends GameModel{
     constructor(object){
@@ -123,4 +123,4 @@ class Game extends GameModel{
     }
 }
 
-export default Game;
+module.exports = Game;

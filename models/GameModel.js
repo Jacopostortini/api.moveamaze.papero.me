@@ -1,5 +1,4 @@
-import * as mongoose from "mongoose";
-
+const mongoose = require("mongoose");
 const GameSchema = new mongoose.Schema({
     status: {
         type: Number,
