@@ -1,9 +1,9 @@
-import endpoints from "./constants/endpoints";
-import Player from "./managers/Player";
-import Game from "./managers/Game";
-import {broadcastDataToPlayers, findPlayerAndGameBySocketId, getCookies} from "./constants/constants";
+const endpoints = require("./constants/endpoints");
+const Player = require("./managers/Player");
+const Game = require("./managers/Game");
+const {broadcastDataToPlayers, findPlayerAndGameBySocketId, getCookies} = require("./constants/constants");
 
-export default (http) => {
+module.exports = (http) => {
   const io = require("socket.io")(http);
 
   io.on("connection", socket => {
