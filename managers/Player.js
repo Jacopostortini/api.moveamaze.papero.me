@@ -16,7 +16,8 @@ class Player extends PlayerModel{
 
   static async findByUserId(userId){
     const playerModel = await PlayerModel.findOne({userId}).exec();
-    return new Player(playerModel);
+    if(playerModel) return new Player(playerModel);
+    else return null;
   }
 
   static async findByGameId(gameId){

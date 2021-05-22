@@ -23,13 +23,11 @@ module.exports = (http) => {
         player.socketId = socket.id;
         player.activeGameId = gameId;
       } else {
-        const data = {
+        player = new Player({
           userId: userId,
           activeGameId: gameId,
           socketId: socket.id
-        }
-        console.log("connect to game", data);
-        player = new Player(data);
+        });
       }
       await player.save();
 
