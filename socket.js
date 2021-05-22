@@ -28,7 +28,7 @@ module.exports = (http) => {
           activeGameId: gameId,
           socketId: socket.id
         }
-        console.log(data);
+        console.log("connect to game", data);
         player = new Player(data);
       }
       await player.save();
