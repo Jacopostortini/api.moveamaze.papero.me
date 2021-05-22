@@ -24,7 +24,7 @@ module.exports = (http) => {
         player.activeGameId = gameId;
       } else {
         player = new Player({
-          userId,
+          userId: userId,
           activeGameId: gameId,
           socketId: socket.id
         });
