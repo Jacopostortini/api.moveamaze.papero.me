@@ -3,6 +3,7 @@ const Game = require("./Game");
 
 class Player extends PlayerModel{
   constructor(object){
+    console.log(object)
     super(object);
     /*
      * this.userId = object.userId;
