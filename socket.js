@@ -9,14 +9,11 @@ module.exports = (http) => {
   io.on("connection", socket => {
     //get username and userId from cookies
     const cookies = getCookies(socket);
-    console.log(cookies);
     const {userId, username} = cookies;
 
     socket.on(endpoints.CONNECT_TO_GAME, async data => {
-      console.log("connect to game: ", data)
       //get gameId from data
       let {gameId} = data;
-      console.log(userId, gameId);
       if(!userId || !gameId) return null;
       gameId = gameId.toLowerCase();
 
@@ -42,7 +39,6 @@ module.exports = (http) => {
       } //TODO: status >= 1 ? implement online-offline
 
       //Respond with the whole game
-      console.log("sending game:", game.getGame(userId));
       socket.emit(endpoints.LOBBY_MODIFIED, game.getGame(userId));
     });
 

@@ -50,6 +50,7 @@ class Game extends GameModel{
     }
 
     getGame(userId){
+        console.log(this);
         let yourLocalId = null;
         if(userId){
             if(this.players[userId]){
