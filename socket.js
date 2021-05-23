@@ -79,7 +79,7 @@ module.exports = (http) => {
 
     socket.on("disconnect", async () => {
       //Get player and active game
-      const {player, game} = findPlayerAndGameBySocketId(socket.id);
+      const {player, game} = await findPlayerAndGameBySocketId(socket.id);
       if(!player || !game) return null;
       if(game.status === 0){
         game.removePlayer(player);
