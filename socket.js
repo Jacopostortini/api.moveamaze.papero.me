@@ -77,8 +77,9 @@ module.exports = (http) => {
       }
     });
 
-    /*socket.on("disconnect", async () => {
+    socket.on("disconnect", async () => {
       //Get player and active game
+      console.log("disconnection: ", socket.id);
       const {player, game} = await findPlayerAndGameBySocketId(socket.id);
       if(!player || !game) return null;
       if(game.status === 0){
@@ -93,7 +94,7 @@ module.exports = (http) => {
         //TODO: IMPLEMENT online-offline
       }
 
-    });*/
+    });
 
   });
 
