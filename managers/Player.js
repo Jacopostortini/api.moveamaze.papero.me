@@ -3,7 +3,7 @@ const Game = require("./Game");
 
 class Player extends PlayerModel{
   constructor(object){
-    console.log("new player", object)
+    console.log("new player", object);
     super(object);
     /*
      * this.userId = object.userId;
@@ -31,7 +31,8 @@ class Player extends PlayerModel{
 
   static async findBySocketId(socketId){
     const playerModel = await PlayerModel.findOne({socketId}).exec();
-    return new Player(playerModel);
+    if(playerModel) return new Player(playerModel);
+    else return null;
   }
 }
 
