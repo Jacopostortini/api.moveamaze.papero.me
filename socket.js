@@ -10,7 +10,6 @@ module.exports = (http) => {
     //get username and userId from cookies
     const cookies = getCookies(socket);
     const {userId, username} = cookies;
-    console.log("connection:", socket.id)
 
     socket.on(endpoints.CONNECT_TO_GAME, async data => {
       //get gameId from data
@@ -80,7 +79,6 @@ module.exports = (http) => {
 
     socket.on("disconnect", async () => {
       //Get player and active game
-      console.log("disconnection: ", socket.id);
       const {player, game} = await findPlayerAndGameBySocketId(socket.id);
       if(!player || !game) return null;
       if(game.status === 0){
