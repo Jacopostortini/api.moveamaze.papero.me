@@ -3,7 +3,6 @@ const Game = require("./Game");
 
 class Player extends PlayerModel{
   constructor(object){
-    console.log("new player", object);
     super(object);
     /*
      * this.userId = object.userId;
@@ -21,10 +20,10 @@ class Player extends PlayerModel{
   }
 
   static async findByGameId(gameId){
-    const game = Game.findByGameId(gameId);
+    const game = await Game.findByGameId(gameId);
     const players = {};
     for(const userId in game.players){
-      players[userId] = this.findByUserId(userId);
+      players[userId] = await this.findByUserId(userId);
     }
     return players;
   }

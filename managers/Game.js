@@ -31,7 +31,8 @@ class Game extends GameModel{
 
     static async findByGameId(gameId){
         const gameModel = await GameModel.findOne({gameId}).exec();
-        return new Game(gameModel);
+        if(gameModel) return new Game(gameModel);
+        else return null;
     }
 
     static createFromPlayerAndGameId({player, gameId, username}){
