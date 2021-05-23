@@ -44,7 +44,7 @@ module.exports = (http) => {
 
     socket.on(endpoints.JOIN_GAME, async () => {
       //Get player and active game
-      const {player, game} = findPlayerAndGameBySocketId(socket.id);
+      const {player, game} = await findPlayerAndGameBySocketId(socket.id);
       if(!player || !game) return null;
       //Add player to game
       game.addPlayer({player, username});
@@ -55,7 +55,7 @@ module.exports = (http) => {
 
     socket.on(endpoints.QUIT_GAME, async () => {
       //Get player and active game
-      const {player, game} = findPlayerAndGameBySocketId(socket.id);
+      const {player, game} = await findPlayerAndGameBySocketId(socket.id);
       if(!player || !game) return null;
       //Remove player from game
       game.removePlayer(player);
@@ -66,7 +66,7 @@ module.exports = (http) => {
 
     socket.on(endpoints.CHANGE_COLOR, async color => {
       //Get player and active game
-      const {player, game} = findPlayerAndGameBySocketId(socket.id);
+      const {player, game} = await findPlayerAndGameBySocketId(socket.id);
       if(!player || !game) return null;
       if(game.players[player.userId]){
         if(game.isColorAvailable(color)) {

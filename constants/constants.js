@@ -15,10 +15,10 @@ const getCookies = (socket) => {
     }
 }
 
-const findPlayerAndGameBySocketId = (socketId) => {
-    const player = Player.findBySocketId(socketId);
+const findPlayerAndGameBySocketId = async (socketId) => {
+    const player = await Player.findBySocketId(socketId);
     if(!player) return {player: null, game: null};
-    const game = Game.findByGameId(player.activeGameId);
+    const game = await Game.findByGameId(player.activeGameId);
     return {player, game};
 }
 
