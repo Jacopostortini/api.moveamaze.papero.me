@@ -15,6 +15,7 @@ module.exports = (http) => {
       console.log("connect to game: ", data)
       //get gameId from data
       let {gameId} = data;
+      console.log(userId, gameId);
       if(!userId || !gameId) return null;
       gameId = gameId.toLowerCase();
 
