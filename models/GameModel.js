@@ -9,7 +9,7 @@ const GameSchema = new mongoose.Schema({
         default: {}
     },
     admin: {
-        type: Number,
+        type: String,
         required: true
     },
     tiles: {
