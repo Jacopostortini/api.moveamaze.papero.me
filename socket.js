@@ -9,6 +9,7 @@ module.exports = (http) => {
   io.on("connection", socket => {
     //get username and userId from cookies
     const cookies = getCookies(socket);
+    console.log(cookies);
     const {userId, username} = cookies;
 
     socket.on(endpoints.CONNECT_TO_GAME, async data => {
