@@ -10,6 +10,7 @@ module.exports = (http) => {
     //get username and userId from cookies
     const cookies = getCookies(socket);
     const {userId, username} = cookies;
+    console.log("connection:", socket.id)
 
     socket.on(endpoints.CONNECT_TO_GAME, async data => {
       //get gameId from data
