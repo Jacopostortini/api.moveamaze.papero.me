@@ -51,7 +51,6 @@ class Game extends GameModel{
     }
 
     getGame(userId){
-        console.log(this);
         let yourLocalId = null;
         if(userId){
             if(this.players[userId]){
@@ -69,6 +68,7 @@ class Game extends GameModel{
                 const {localId, username, color} = this.players[userId];
                 data.players[localId] = {localId, username, color};
             }
+            console.log("getGame: ", data);
             return data;
         } else if(this.status === 1 || this.status === 1.5){
 
