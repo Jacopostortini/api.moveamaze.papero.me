@@ -12,6 +12,7 @@ module.exports = (http) => {
     const {userId, username} = cookies;
 
     socket.on(endpoints.CONNECT_TO_GAME, async data => {
+      console.log("connect to game: ", data)
       //get gameId from data
       let {gameId} = data;
       if(!userId || !gameId) return null;
@@ -39,6 +40,7 @@ module.exports = (http) => {
       } //TODO: status >= 1 ? implement online-offline
 
       //Respond with the whole game
+      console.log("sending game:", game.getGame(userId));
       socket.emit(endpoints.LOBBY_MODIFIED, game.getGame(userId));
     });
 
@@ -77,7 +79,7 @@ module.exports = (http) => {
       }
     });
 
-    socket.on("disconnect", async () => {
+    /*socket.on("disconnect", async () => {
       //Get player and active game
       const {player, game} = await findPlayerAndGameBySocketId(socket.id);
       if(!player || !game) return null;
@@ -93,7 +95,7 @@ module.exports = (http) => {
         //TODO: IMPLEMENT online-offline
       }
 
-    });
+    });*/
 
   });
 
