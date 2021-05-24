@@ -1,7 +1,7 @@
 const endpoints = require("./constants/endpoints");
 const Player = require("./managers/Player");
 const Game = require("./managers/Game");
-const {broadcastDataToPlayers, findPlayerAndGameBySocketId, getCookies} = require("./constants/constants");
+const {broadcastDataToPlayers, findPlayerAndGameBySocketId, getCookies} = require("./constants/utils");
 
 module.exports = (http) => {
   const io = require("socket.io")(http);
