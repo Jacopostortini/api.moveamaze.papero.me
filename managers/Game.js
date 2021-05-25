@@ -21,7 +21,8 @@ class Game extends GameModel{
         *                                        }
         *                                  },
         *                                  color: Number,
-        *                                  position: Array
+        *                                  position: Array,
+        *                                  online: Boolean
         *                                }
         *                              }
         * this.save();
@@ -41,7 +42,8 @@ class Game extends GameModel{
             userId: player.userId,
             localId: Date.now(),
             username,
-            color: 0
+            color: 0,
+            online: true
         };
         return new Game({
             admin: player.userId,
@@ -85,7 +87,8 @@ class Game extends GameModel{
             userId: player.userId,
             localId: Date.now(),
             username,
-            color: this.getFirstAvailableColor()
+            color: this.getFirstAvailableColor(),
+            online: true
         }
     }
 

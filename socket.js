@@ -31,12 +31,16 @@ module.exports = (http) => {
       }
       await player.save();
 
-      //get game if it does exists and create one if it does not
+      //get game if it exists and create one if it does not
       let game = await Game.findByGameId(gameId);
       if(!game){
         game = await Game.createFromPlayerAndGameId({player, gameId, username});
-        await game.save();
-      } //TODO: status >= 1 ? implement online-offline
+      } else if(game.status > 0){
+        if(game.players[player.userId]){
+          game.players[player.userId].online = true;
+        }
+      }
+      await game.save();
 
       //Respond with the whole game
       socket.emit(endpoints.LOBBY_MODIFIED, game.getGame(userId));
@@ -90,7 +94,15 @@ module.exports = (http) => {
           broadcastDataToPlayers(endpoints.LOBBY_MODIFIED, io, game.getGame(userId), game.gameId);
         }
       } else {
-        //TODO: IMPLEMENT online-offline
+        if(game.players[player.userId]) {
+          game.players[player.userId].online = false;
+          await game.save();
+          const data = {
+            localId: game.players[player.userId].localId,
+            online: false
+          }
+          broadcastDataToPlayers(endpoints.ONLINE_STATE_CHANGED, io, data, game.gameId);
+        }
       }
 
     });

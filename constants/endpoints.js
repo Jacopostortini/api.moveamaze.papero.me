@@ -6,4 +6,5 @@ module.exports = {
     CHANGE_COLOR: "change_color", //(color) => game to everybody
     LOBBY_MODIFIED: "lobby-modified", // game to everybody
 
+    ONLINE_STATE_CHANGED: "online-state-changed", //{localId, online} to everybody
 }
