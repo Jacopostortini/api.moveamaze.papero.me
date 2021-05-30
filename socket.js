@@ -1,7 +1,7 @@
 const endpoints = require("./constants/endpoints");
 const Player = require("./managers/Player");
 const Game = require("./managers/Game");
-const {broadcastDataToPlayers, findPlayerAndGameBySocketId, getCookies} = require("./constants/utils");
+const {broadcastGameToPlayers, findPlayerAndGameBySocketId, getCookies} = require("./constants/utils");
 
 module.exports = (http) => {
   const io = require("socket.io")(http);
@@ -54,7 +54,7 @@ module.exports = (http) => {
       game.addPlayer({player, username});
       await game.save();
       //Update game
-      broadcastDataToPlayers(endpoints.LOBBY_MODIFIED, io, game.getGame(userId), game.gameId);
+      broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
     });
 
     socket.on(endpoints.QUIT_GAME, async () => {
@@ -65,7 +65,7 @@ module.exports = (http) => {
       game.removePlayer(player);
       await game.save();
       //Update game
-      broadcastDataToPlayers(endpoints.LOBBY_MODIFIED, io, game.getGame(userId), game.gameId);
+      broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
     });
 
     socket.on(endpoints.CHANGE_COLOR, async color => {
@@ -73,11 +73,43 @@ module.exports = (http) => {
       const {player, game} = await findPlayerAndGameBySocketId(socket.id);
       if(!player || !game) return null;
       if(game.players[player.userId]){
+        //Check if color is available
         if(game.isColorAvailable(color)) {
+          //Change color, save game and send lobby modified
           game.players[player.userId].color = color;
           await game.save();
-          broadcastDataToPlayers(endpoints.LOBBY_MODIFIED, io, game.getGame(), game.gameId);
+          broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
+        } else {
+          //Find the user who owns the color and send him a request to switch
+          const ownerId = game.findUserIdByColor(color);
+          if(ownerId){
+            const owner = await Player.findByUserId(ownerId);
+            const data = {
+              requester: game.players[player.userId].localId
+            }
+            io.sockets.connected[owner.socketId].emit(endpoints.REQUEST_SWITCH_COLOR, data);
+          }
         }
+      }
+    });
+
+    socket.on(endpoints.REQUEST_SWITCH_COLOR, async data => {
+      const {response, requester} = data;
+      //Check if the response is affirmative
+      if(response){
+        //Get player and game
+        const {player, game} = findPlayerAndGameBySocketId(socket.id);
+        if(!player || !game) return null;
+        //Find the user id of the one who requested the switch in the first place
+        const requesterId = game.findUserIdByLocalId(requester);
+        if(!requesterId) return null;
+        //Switch the colors, save the game and send lobby modified
+        const requesterColor = game.players[requesterId].color;
+        game.players[requesterId].color = game.players[player.userId].color;
+        game.players[player.userId].color = requesterColor;
+
+        await game.save();
+        broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game)
       }
     });
 
@@ -91,7 +123,7 @@ module.exports = (http) => {
           await game.remove();
         } else {
           await game.save();
-          broadcastDataToPlayers(endpoints.LOBBY_MODIFIED, io, game.getGame(userId), game.gameId);
+          broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
         }
       } else {
         if(game.players[player.userId]) {
@@ -101,7 +133,7 @@ module.exports = (http) => {
             localId: game.players[player.userId].localId,
             online: false
           }
-          broadcastDataToPlayers(endpoints.ONLINE_STATE_CHANGED, io, data, game.gameId);
+          broadcastGameToPlayers(endpoints.ONLINE_STATE_CHANGED, io, game);
         }
       }
 

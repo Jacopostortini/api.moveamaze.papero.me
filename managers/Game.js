@@ -52,6 +52,22 @@ class Game extends GameModel{
         });
     }
 
+    findUserIdByColor(color){
+        if(!color) return null;
+        for(const userId in this.players) {
+            if (this.players[userId].color === color) return userId;
+        }
+        return null;
+    }
+
+    findUserIdByLocalId(localId){
+        if(!localId) return null;
+        for(const userId in this.players){
+            if (this.players[userId].localId === localId) return userId;
+        }
+        return null;
+    }
+
     getGame(userId){
         let yourLocalId = null;
         if(userId){

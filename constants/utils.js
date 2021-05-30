@@ -18,11 +18,11 @@ const findPlayerAndGameBySocketId = async (socketId) => {
     return {player, game};
 }
 
-const broadcastDataToPlayers = (endpoint, io, data, gameId) => {
-    const players = Player.findByGameId(gameId);
+const broadcastGameToPlayers = (endpoint, io, game) => {
+    const players = Player.findByGameId(game.gameId);
     for(const userId in players){
-        io.sockets.connected[players[userId].socketId].emit(endpoint, data);
+        io.sockets.connected[players[userId].socketId].emit(endpoint, game.getGame(userId));
     }
 }
 
-module.exports = {getCookies, findPlayerAndGameBySocketId, broadcastDataToPlayers};
+module.exports = {getCookies, findPlayerAndGameBySocketId, broadcastGameToPlayers};
