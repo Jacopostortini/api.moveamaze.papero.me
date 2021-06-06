@@ -54,7 +54,7 @@ module.exports = (http) => {
       game.addPlayer({player, username});
       await game.save();
       //Update game
-      broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
+      await broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
     });
 
     socket.on(endpoints.QUIT_GAME, async () => {
@@ -65,7 +65,7 @@ module.exports = (http) => {
       game.removePlayer(player);
       await game.save();
       //Update game
-      broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
+      await broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
     });
 
     socket.on(endpoints.CHANGE_COLOR, async color => {
@@ -79,7 +79,7 @@ module.exports = (http) => {
           //Change color, save game and send lobby modified
           game.players[player.userId].color = color;
           await game.save();
-          broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
+          await broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
           socket.emit(endpoints.CHANGE_COLOR, true);
         } else {
           //Find the user who owns the color and send him a request to switch
@@ -111,7 +111,7 @@ module.exports = (http) => {
         game.players[player.userId].color = requesterColor;
 
         await game.save();
-        broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game)
+        await broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game)
       }
     });
 
@@ -125,7 +125,7 @@ module.exports = (http) => {
           await game.remove();
         } else {
           await game.save();
-          broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
+          await broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
         }
       } else {
         if(game.players[player.userId]) {
@@ -135,7 +135,7 @@ module.exports = (http) => {
             localId: game.players[player.userId].localId,
             online: false
           }
-          broadcastGameToPlayers(endpoints.ONLINE_STATE_CHANGED, io, game);
+          await broadcastGameToPlayers(endpoints.ONLINE_STATE_CHANGED, io, game);
         }
       }
 

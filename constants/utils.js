@@ -18,12 +18,9 @@ const findPlayerAndGameBySocketId = async (socketId) => {
     return {player, game};
 }
 
-const broadcastGameToPlayers = (endpoint, io, game) => {
-    console.log(game)
-    const players = Player.findByGameId(game.gameId);
-    console.log(players)
+const broadcastGameToPlayers = async (endpoint, io, game) => {
+    const players = await Player.findByGameId(game.gameId);
     for(const userId in players){
-        console.log(userId)
         io.sockets.connected[players[userId].socketId].emit(endpoint, game.getGame(userId));
     }
 }
