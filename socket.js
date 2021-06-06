@@ -69,6 +69,7 @@ module.exports = (http) => {
     });
 
     socket.on(endpoints.CHANGE_COLOR, async color => {
+      console.log("change color:", color);
       //Get player and active game
       const {player, game} = await findPlayerAndGameBySocketId(socket.id);
       if(!player || !game) return null;
