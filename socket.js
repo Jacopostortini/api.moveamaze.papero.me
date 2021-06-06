@@ -74,17 +74,14 @@ module.exports = (http) => {
       const {player, game} = await findPlayerAndGameBySocketId(socket.id);
       if(!player || !game) return null;
       if(game.players[player.userId]){
-        console.log("player is playing")
         //Check if color is available
         if(game.isColorAvailable(color)) {
-          console.log("color available")
           //Change color, save game and send lobby modified
           game.players[player.userId].color = color;
           await game.save();
           broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
           socket.emit(endpoints.CHANGE_COLOR, true);
         } else {
-          console.log("color unavailable")
           //Find the user who owns the color and send him a request to switch
           const ownerId = game.findUserIdByColor(color);
           if(ownerId){

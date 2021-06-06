@@ -19,8 +19,11 @@ const findPlayerAndGameBySocketId = async (socketId) => {
 }
 
 const broadcastGameToPlayers = (endpoint, io, game) => {
+    console.log(game)
     const players = Player.findByGameId(game.gameId);
+    console.log(players)
     for(const userId in players){
+        console.log(userId)
         io.sockets.connected[players[userId].socketId].emit(endpoint, game.getGame(userId));
     }
 }
