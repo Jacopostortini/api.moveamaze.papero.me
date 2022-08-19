@@ -80,7 +80,6 @@ module.exports = (http) => {
           game.players[player.userId].color = color;
           await game.save();
           await broadcastGameToPlayers(endpoints.LOBBY_MODIFIED, io, game);
-          socket.emit(endpoints.CHANGE_COLOR, true);
         } else {
           //Find the user who owns the color and send him a request to switch
           const ownerId = game.findUserIdByColor(color);
